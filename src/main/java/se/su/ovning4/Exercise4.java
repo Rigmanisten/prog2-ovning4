@@ -1,9 +1,6 @@
 package se.su.ovning4;
 
 
-import java.util.Set;
-import java.util.SortedSet;
-import java.util.SortedMap;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.FileNotFoundException;
@@ -61,11 +58,32 @@ public class Exercise4 {
     }
 
     public int getPopularity(Record item) {
-       return -1;
+      int popularity = graph.getEdgesFrom(item).size(); 
+      return popularity;
     }
 
     public SortedMap<Integer, Set<Record>> getTop5() {
-       return null;
+      SortedMap<Integer, Set<Record>> popularityMap = new TreeMap<>(Collections.reverseOrder());
+
+      for (Node node : graph.getNodes()) {
+          if (node instanceof Record record) {
+              int popularity = getPopularity(record);
+              popularityMap.computeIfAbsent(popularity, k -> new HashSet<>()).add(record);
+          }
+      }
+  
+
+      SortedMap<Integer, Set<Record>> top5 = new TreeMap<>(Collections.reverseOrder());
+      int count = 0;
+      for (Map.Entry<Integer, Set<Record>> entry : popularityMap.entrySet()) {
+          if (count >= 5) break;
+          top5.put(entry.getKey(), entry.getValue());
+          count++;
+      }
+  
+      return top5;
+        
+  
     }
 
     public void loadRecommendationGraph(String fileName) {
