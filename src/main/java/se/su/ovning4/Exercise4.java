@@ -62,7 +62,7 @@ public class Exercise4 {
 
                 graph.add(person);
                 graph.add(record);
-                graph.connect(person, record, "rekomendation", 1);
+                graph.connect(person, record, "recommendation", 0);
             }
 
             reader.close();
