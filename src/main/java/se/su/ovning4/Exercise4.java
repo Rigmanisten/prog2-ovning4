@@ -51,6 +51,25 @@ public class Exercise4 {
     }
 
     public void loadRecommendationGraph(String fileName) {
-    }
+        try{
+            BufferedReader reader = new BufferedReader(new FileReader(fileName));
+            String line;
+            while ((line = reader.readLine()) != null) {
 
+                String[] parts = line.split(";");
+                Person person = new Person(parts[0]);
+                Record record = new Record(parts[1], parts[2]);
+
+                graph.add(person);
+                graph.add(record);
+                graph.connect(person, record, "rekomendation", 1);
+            }
+
+            reader.close();
+        } catch (FileNotFoundException e) {
+            System.out.printf("%s not found",fileName);
+        } catch (IOException e){
+            e.printStackTrace();
+        }
+    }
 }
