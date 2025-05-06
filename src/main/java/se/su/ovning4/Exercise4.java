@@ -16,19 +16,37 @@ public class Exercise4 {
     private Graph<Node> graph = new ListGraph<>();
 
     public void loadLocationGraph(String fileName){
-      
       try{
          BufferedReader reader = new BufferedReader(new FileReader(fileName));
          String line;
-         while ((line = reader.readLine()) != null) {
-            
+         Graph <Location> locationGraph = new ListGraph<>();
+         if ((line = reader.readLine()) != null){
+            line = reader.readLine();
             String[] parts = line.split(";");
-            String name = parts[0];
-            double xKoordinat = Double.parseDouble(parts[1]);
-            double yKoordinat = Double.parseDouble(parts[2]);
-            new Location(name, xKoordinat, yKoordinat);
+           
+            for (int i = 0; i < parts.length; i += 3) {
+               String name = parts[i];
+               double xKoordinat = Double.parseDouble(parts[i+1]);
+               double yKoordinat = Double.parseDouble(parts[i+2]);
+               locationGraph.add(new Location(name, xKoordinat, yKoordinat));
+            }
          }
+         while ((line = reader.readLine()) != null) {
+            String[] parts = line.split(";");
+            String fromName = parts[0];
+            String toName = parts[1];
+            String vehicle = parts[2];
+            int weight = Integer.parseInt(parts[3]);
 
+            Location from = null;
+            Location to = null;
+
+            for(Location Node : locationGraph.getNodes()){
+               if(Node.getName().equals(fromName)){from = Node;}
+               if(Node.getName().equals(toName)){to = Node;}
+            }
+            graph.connect(from, to, vehicle ,weight);
+            }
 
          reader.close();
 		} catch (FileNotFoundException e) {
