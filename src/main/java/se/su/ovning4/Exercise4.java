@@ -2,10 +2,8 @@ package se.su.ovning4;
 
 
 import java.io.BufferedReader;
-import java.io.BufferedWriter;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.util.*;
 
@@ -54,7 +52,28 @@ public class Exercise4 {
     }
 
     public SortedMap<Integer, SortedSet<Record>> getAlsoLiked(Record item) {
-       return null;
+        
+        Map<Record, Integer> countingMap = new HashMap<>();
+        
+        for(Edge<Node> toPerson: graph.getEdgesFrom(item)){
+            Node p = toPerson.getDestination();
+            for(Edge<Node> fromPerson: graph.getEdgesFrom(p)){
+                Record record = (Record) fromPerson.getDestination();
+                if(!record.equals(item)){
+                    countingMap.put(record, countingMap.getOrDefault(record, 0)+1);
+                }
+            }
+        }
+        SortedMap<Integer, SortedSet<Record>> alosLiked = new TreeMap<>(Collections.reverseOrder()); 
+        for(Map.Entry< Record,Integer> entry : countingMap.entrySet()){
+            int count = entry.getValue();
+            alosLiked.computeIfAbsent(count, k -> 
+            new TreeSet<>(Comparator.comparing(Record::toString))).add(entry.getKey());
+        }
+        
+        
+        return alosLiked;
+
     }
 
     public int getPopularity(Record item) {
